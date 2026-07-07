@@ -1,5 +1,5 @@
-pub mod greedy;
 pub mod backtracking;
+pub mod greedy;
 
 #[derive(Clone)]
 pub struct Grid {
@@ -37,7 +37,7 @@ pub fn parse_input(bytes: &[u8]) -> Grid {
     let mut cursor = 0;
     let n = parse_int(bytes, &mut cursor);
     let m = parse_int(bytes, &mut cursor);
-    
+
     let mut raw_buffer = Vec::with_capacity(n * m);
     while cursor < bytes.len() && raw_buffer.len() < n * m {
         let b = bytes[cursor];
@@ -46,15 +46,15 @@ pub fn parse_input(bytes: &[u8]) -> Grid {
             raw_buffer.push(b);
         }
     }
-    
+
     Grid { n, m, raw_buffer }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::greedy::solve_greedy;
     use crate::backtracking::solve_backtracking;
+    use crate::greedy::solve_greedy;
 
     fn check_valid(grid: &Grid, out: &Grid) {
         assert_eq!(grid.n, out.n);
@@ -63,12 +63,30 @@ mod tests {
             for c in 0..grid.m {
                 let orig = grid.get(r, c);
                 let new_val = out.get(r, c);
-                assert_ne!(orig, new_val, "Cell ({}, {}) shares same color as original: {}", r, c, new_val as char);
+                assert_ne!(
+                    orig, new_val,
+                    "Cell ({}, {}) shares same color as original: {}",
+                    r, c, new_val as char
+                );
                 if r > 0 {
-                    assert_ne!(new_val, out.get(r - 1, c), "Cell ({}, {}) conflicts with top neighbor: {}", r, c, new_val as char);
+                    assert_ne!(
+                        new_val,
+                        out.get(r - 1, c),
+                        "Cell ({}, {}) conflicts with top neighbor: {}",
+                        r,
+                        c,
+                        new_val as char
+                    );
                 }
                 if c > 0 {
-                    assert_ne!(new_val, out.get(r, c - 1), "Cell ({}, {}) conflicts with left neighbor: {}", r, c, new_val as char);
+                    assert_ne!(
+                        new_val,
+                        out.get(r, c - 1),
+                        "Cell ({}, {}) conflicts with left neighbor: {}",
+                        r,
+                        c,
+                        new_val as char
+                    );
                 }
             }
         }
@@ -80,14 +98,17 @@ mod tests {
         let grid = parse_input(input);
         assert_eq!(grid.n, 3);
         assert_eq!(grid.m, 3);
-        assert_eq!(grid.raw_buffer, vec![b'A', b'B', b'C', b'B', b'C', b'D', b'C', b'D', b'A']);
+        assert_eq!(
+            grid.raw_buffer,
+            vec![b'A', b'B', b'C', b'B', b'C', b'D', b'C', b'D', b'A']
+        );
     }
 
     #[test]
     fn test_algorithms_basic() {
         let input = b"3 3\nAAA\nAAA\nAAA";
         let grid = parse_input(input);
-        
+
         let out_greedy = solve_greedy(&grid).expect("Greedy solved basic grid");
         check_valid(&grid, &out_greedy);
 

@@ -27,10 +27,10 @@ pub fn solve_greedy(grid: &Grid) -> Option<Grid> {
         let row_offset = r * m;
         for c in 0..m {
             let idx = row_offset + c;
-            
+
             // Retrieve original character safely/unchecked
             let original_char = unsafe { *grid_buffer.get_unchecked(idx) };
-            
+
             // Initialize mask with original char
             let mut forbidden_mask = 1 << (original_char - b'A');
 
@@ -39,7 +39,7 @@ pub fn solve_greedy(grid: &Grid) -> Option<Grid> {
                 let top_char = unsafe { *out_buffer.get_unchecked(idx - m) };
                 forbidden_mask |= 1 << (top_char - b'A');
             }
-            
+
             // Add left neighbor if valid
             if c > 0 {
                 let left_char = unsafe { *out_buffer.get_unchecked(idx - 1) };
@@ -58,7 +58,7 @@ pub fn solve_greedy(grid: &Grid) -> Option<Grid> {
             if chosen == 0 {
                 return None; // Theoretically unreachable for 4-coloring
             }
-            
+
             // Write output safely/unchecked
             unsafe {
                 *out_buffer.get_unchecked_mut(idx) = chosen;
@@ -66,5 +66,9 @@ pub fn solve_greedy(grid: &Grid) -> Option<Grid> {
         }
     }
 
-    Some(Grid { n, m, raw_buffer: out_buffer })
+    Some(Grid {
+        n,
+        m,
+        raw_buffer: out_buffer,
+    })
 }

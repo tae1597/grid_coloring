@@ -16,19 +16,17 @@ pub fn solve_backtracking(grid: &Grid) -> Option<Grid> {
     let mut out_buffer = vec![0u8; n * m];
 
     if backtrack(0, n, m, &grid.raw_buffer, &mut out_buffer) {
-        Some(Grid { n, m, raw_buffer: out_buffer })
+        Some(Grid {
+            n,
+            m,
+            raw_buffer: out_buffer,
+        })
     } else {
         None
     }
 }
 
-fn backtrack(
-    idx: usize,
-    n: usize,
-    m: usize,
-    grid_buffer: &[u8],
-    out_buffer: &mut [u8],
-) -> bool {
+fn backtrack(idx: usize, n: usize, m: usize, grid_buffer: &[u8], out_buffer: &mut [u8]) -> bool {
     // Base Case: all cells colored
     if idx == n * m {
         return true;

@@ -1,5 +1,5 @@
 use criterion::{criterion_group, criterion_main, BenchmarkId, Criterion};
-use cses_3311_grid_coloring::{Grid, greedy::solve_greedy, backtracking::solve_backtracking};
+use cses_3311_grid_coloring::{backtracking::solve_backtracking, greedy::solve_greedy, Grid};
 
 fn generate_random_grid(n: usize, m: usize) -> Grid {
     let mut seed = 12345u64;
@@ -17,7 +17,7 @@ fn generate_random_grid(n: usize, m: usize) -> Grid {
 
 fn bench_grid_coloring(c: &mut Criterion) {
     let mut group = c.benchmark_group("Grid Coloring");
-    
+
     // Benchmark Greedy Scan on scaling inputs
     for &size in &[10, 100, 500] {
         let grid = generate_random_grid(size, size);
@@ -34,7 +34,7 @@ fn bench_grid_coloring(c: &mut Criterion) {
             b.iter(|| solve_backtracking(g));
         });
     }
-    
+
     group.finish();
 }
 

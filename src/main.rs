@@ -35,7 +35,7 @@ pub fn parse_input(bytes: &[u8]) -> Grid {
     let mut cursor = 0;
     let n = parse_int(bytes, &mut cursor);
     let m = parse_int(bytes, &mut cursor);
-    
+
     let mut raw_buffer = Vec::with_capacity(n * m);
     while cursor < bytes.len() && raw_buffer.len() < n * m {
         let b = bytes[cursor];
@@ -44,7 +44,7 @@ pub fn parse_input(bytes: &[u8]) -> Grid {
             raw_buffer.push(b);
         }
     }
-    
+
     Grid { n, m, raw_buffer }
 }
 
@@ -61,7 +61,7 @@ pub fn solve_greedy(grid: &Grid) -> Option<Grid> {
         let row_offset = r * m;
         for c in 0..m {
             let idx = row_offset + c;
-            
+
             // Unsafe lookup for hot loop speed
             let original_char = unsafe { *grid_buffer.get_unchecked(idx) };
             let mut forbidden_mask = 1 << (original_char - b'A');
@@ -92,7 +92,11 @@ pub fn solve_greedy(grid: &Grid) -> Option<Grid> {
         }
     }
 
-    Some(Grid { n, m, raw_buffer: out_buffer })
+    Some(Grid {
+        n,
+        m,
+        raw_buffer: out_buffer,
+    })
 }
 
 fn main() {
@@ -100,17 +104,17 @@ fn main() {
     io::stdin().read_to_end(&mut raw_buffer).unwrap();
 
     let grid = parse_input(&raw_buffer);
-    
+
     if let Some(out_grid) = solve_greedy(&grid) {
         let mut out_bytes = Vec::with_capacity(out_grid.n * (out_grid.m + 1));
-        
+
         for r in 0..out_grid.n {
             let start = r * out_grid.m;
             let end = start + out_grid.m;
             out_bytes.extend_from_slice(&out_grid.raw_buffer[start..end]);
             out_bytes.push(b'\n');
         }
-        
+
         let stdout = io::stdout();
         let mut handle = io::BufWriter::new(stdout.lock());
         handle.write_all(&out_bytes).unwrap();
