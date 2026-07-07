@@ -1,0 +1,24 @@
+[package]
+name = "cses_3311_grid_coloring"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+
+[dev-dependencies]
+criterion = { version = "0.5", features = ["html_reports"] }
+
+[[bin]]
+name = "cses_3311_grid_coloring"
+path = "src/main.rs"
+
+
+[[bench]]
+name = "benchmark"
+harness = false
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort"
